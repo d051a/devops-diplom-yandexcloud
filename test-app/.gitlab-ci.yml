@@ -1,0 +1,44 @@
+stages:
+  - build
+  - deploy
+
+variables:
+  STORAGE_DRIVER: vfs
+  BUILDAH_FORMAT: docker
+  IMAGE_NAME: "my-app-nginx"
+  FQ_IMAGE_NAME: "d051a/$IMAGE_NAME:$CI_COMMIT_REF_NAME"
+
+build:
+  stage: build
+  image: quay.io/buildah/stable
+  before_script:
+    - echo "$CI_REGISTRY_PASSWORD" | buildah login --username "$CI_REGISTRY_USER" --password-stdin docker.io
+  script:
+    - buildah images
+    - buildah bud -t $FQ_IMAGE_NAME --from=docker.io/nginx:latest .
+    - buildah images
+    - buildah push $FQ_IMAGE_NAME
+  rules:
+    - when: always
+
+deploy:
+  image: ubuntu:22.04
+  stage: deploy
+  before_script:
+    # Устанавливаем kubectl
+    - apt update
+    - apt install -y curl
+    - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+    - chmod +x ./kubectl
+    - mv ./kubectl /usr/local/bin/kubectl
+    
+    # # Если файл конфигурации Kubernetes (например, kubeconfig) уже есть, используем его
+    # - echo "$KUBE_CONFIG" > /root/.kube/config
+
+    # Убедитесь, что kubectl использует правильный конфиг
+    - kubectl config view
+
+  script:
+    # Выполняем команду для обновления образа в деплойменте
+    - kubectl --kubeconfig=$KUBE_CONFIG set image deployment/my-nginx my-nginx=$FQ_IMAGE_NAME
+  when: on_success

@@ -120,3 +120,14 @@ tmp.md
 # Ansible collection files
 kubernetes_sigs-kubespray*tar.gz
 ansible_collections
+
+
+terraform/vms/kubespray
+terraform/vms/ansible_inventory.ini
+terraform/vms/inventory.ini
+personal.auto.tfvars
+terraform-key.json
+
+*kube.conf
+
+ANSWER.md
