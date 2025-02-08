@@ -187,7 +187,9 @@ CD/CD реализовано на базе Gitlab-CI
 
 2. Как вы ставили ingress и какой использовали балансировщик? curl -I http://netology.zapto.org у меня выдает ошибку
 
-```Исправлено: Cчет на yandex.cloud ушел в минус. Пополнил счет. Сейчас доступ есть.
+```
+Исправлено: Cчет на yandex.cloud ушел в минус. Пополнил счет. Сейчас доступ есть.
+
   helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
   helm repo update
   helm --kubeconfig=./kube.conf install ingress-nginx ingress-nginx/ingress-nginx \
