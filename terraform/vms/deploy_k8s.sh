@@ -95,39 +95,39 @@ pip install -r requirements.txt --no-deps
 
 
 
-# # === СОЗДАЁМ INVENTORY ДЛЯ ANSIBLE ===
-# echo "📁 Создаём inventory..."
-# rm -rf "$INVENTORY_DIR"
-# mkdir -p "$INVENTORY_DIR"
-# rm -rf "$INVENTORY_DIR"
-# cp -rfp inventory/sample "$INVENTORY_DIR"
+# === СОЗДАЁМ INVENTORY ДЛЯ ANSIBLE ===
+echo "📁 Создаём inventory..."
+rm -rf "$INVENTORY_DIR"
+mkdir -p "$INVENTORY_DIR"
+rm -rf "$INVENTORY_DIR"
+cp -rfp inventory/sample "$INVENTORY_DIR"
 
-# # Копируем файл inventory.ini
-# cp "$BASE_DIR/inventory.ini" "$INVENTORY_FILE"
+# Копируем файл inventory.ini
+cp "$BASE_DIR/inventory.ini" "$INVENTORY_FILE"
 
 
 
-# # === ИЗВЛЕКАЕМ ВСЕ ВНЕШНИЕ IP-АДРЕСА ИЗ inventory.ini ===
-# echo "🔍 Извлекаем внешние IP-адреса из inventory.ini..."
-# EXTERNAL_IPS=$(grep -Eo '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+' "$INVENTORY_FILE" | sort -u)
+# === ИЗВЛЕКАЕМ ВСЕ ВНЕШНИЕ IP-АДРЕСА ИЗ inventory.ini ===
+echo "🔍 Извлекаем внешние IP-адреса из inventory.ini..."
+EXTERNAL_IPS=$(grep -Eo '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+' "$INVENTORY_FILE" | sort -u)
 
-# # === ОБНОВЛЯЕМ k8s-cluster.yml, ДОБАВЛЯЯ ВНЕШНИЕ IP ===
-# K8S_CLUSTER_YML="$INVENTORY_DIR/group_vars/k8s_cluster/k8s-cluster.yml"
+# === ОБНОВЛЯЕМ k8s-cluster.yml, ДОБАВЛЯЯ ВНЕШНИЕ IP ===
+K8S_CLUSTER_YML="$INVENTORY_DIR/group_vars/k8s_cluster/k8s-cluster.yml"
 
-# echo "📌 Обновляем файл $K8S_CLUSTER_YML с внешними IP..."
+echo "📌 Обновляем файл $K8S_CLUSTER_YML с внешними IP..."
 
-# # Удаляем старые значения `supplementary_addresses_in_ssl_keys`
-# sed -i '' '/supplementary_addresses_in_ssl_keys:/,/^$/d' "$K8S_CLUSTER_YML"
+# Удаляем старые значения `supplementary_addresses_in_ssl_keys`
+sed -i '' '/supplementary_addresses_in_ssl_keys:/,/^$/d' "$K8S_CLUSTER_YML"
 
-# # Добавляем заголовок `supplementary_addresses_in_ssl_keys`
-# echo "supplementary_addresses_in_ssl_keys:" >> "$K8S_CLUSTER_YML"
+# Добавляем заголовок `supplementary_addresses_in_ssl_keys`
+echo "supplementary_addresses_in_ssl_keys:" >> "$K8S_CLUSTER_YML"
 
-# # Добавляем IP-адреса в `k8s-cluster.yml`
-# for IP in $EXTERNAL_IPS; do
-#     echo "  - \"$IP\"" >> "$K8S_CLUSTER_YML"
-# done
+# Добавляем IP-адреса в `k8s-cluster.yml`
+for IP in $EXTERNAL_IPS; do
+    echo "  - \"$IP\"" >> "$K8S_CLUSTER_YML"
+done
 
-# echo "✅ Внешние IP-адреса добавлены в k8s-cluster.yml!"
+echo "✅ Внешние IP-адреса добавлены в k8s-cluster.yml!"
 
 
 

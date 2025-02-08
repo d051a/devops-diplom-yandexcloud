@@ -52,14 +52,15 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
+  ingressClassName: nginx
   rules:
     - host: "netology.zapto.org"
       http:
         paths:
-        - path: /
-          pathType: Prefix
-          backend:
-            service:
-              name: my-nginx-service
-              port:
-                number: 80
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: my-nginx-service
+                port:
+                  number: 80

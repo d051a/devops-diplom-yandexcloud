@@ -1,0 +1,300 @@
+test-app git:(main) ✗ kubectl --kubeconfig=./kube.conf get ingress --all-namespaces;
+NAMESPACE   NAME               CLASS   HOSTS                ADDRESS                                        PORTS   AGE
+default     my-nginx-ingress   nginx   netology.zapto.org   158.160.86.141,158.160.90.189,89.169.152.192   80      16m
+➜  test-app git:(main) ✗ kubectl --kubeconfig=./kube.conf get pods --all-namespaces;
+NAMESPACE       NAME                                        READY   STATUS    RESTARTS        AGE
+default         my-nginx-57c98fb6bf-bb4cm                   1/1     Running   0               16m
+ingress-nginx   ingress-nginx-controller-7657f6db5f-hqttm   1/1     Running   0               34m
+kube-system     calico-kube-controllers-5db5978889-gxp5r    1/1     Running   0               5d23h
+kube-system     calico-node-bk9h8                           1/1     Running   0               5d23h
+kube-system     calico-node-jgbt4                           1/1     Running   0               5d23h
+kube-system     calico-node-ndvhs                           1/1     Running   0               5d23h
+kube-system     coredns-d665d669-42csw                      1/1     Running   0               5d23h
+kube-system     coredns-d665d669-6jw6f                      1/1     Running   0               5d23h
+kube-system     dns-autoscaler-5cb4578f5f-72r4z             1/1     Running   0               5d23h
+kube-system     kube-apiserver-node1                        1/1     Running   1               5d23h
+kube-system     kube-controller-manager-node1               1/1     Running   3 (5d23h ago)   5d23h
+kube-system     kube-proxy-2qm4z                            1/1     Running   0               5d23h
+kube-system     kube-proxy-c5qwz                            1/1     Running   0               5d23h
+kube-system     kube-proxy-dpszl                            1/1     Running   0               5d23h
+kube-system     kube-scheduler-node1                        1/1     Running   1               5d23h
+kube-system     nginx-proxy-node2                           1/1     Running   0               5d23h
+kube-system     nginx-proxy-node3                           1/1     Running   0               5d23h
+kube-system     nodelocaldns-5dpsm                          1/1     Running   0               5d23h
+kube-system     nodelocaldns-c6sjn                          1/1     Running   0               5d23h
+kube-system     nodelocaldns-kqmrh                          1/1     Running   0               5d23h
+monitoring      blackbox-exporter-d7779b7d4-4m88g           3/3     Running   0               5d19h
+monitoring      grafana-778555f685-4dqjm                    1/1     Running   0               5d19h
+monitoring      kube-state-metrics-74f55cf6d9-nzxpm         3/3     Running   0               5d19h
+monitoring      node-exporter-9bp9s                         2/2     Running   0               5d19h
+monitoring      node-exporter-n2k4f                         2/2     Running   0               5d19h
+monitoring      node-exporter-p8k5v                         2/2     Running   0               5d19h
+monitoring      prometheus-adapter-784f566c54-lmqz9         1/1     Running   0               5d19h
+monitoring      prometheus-adapter-784f566c54-wfkdq         1/1     Running   0               5d19h
+monitoring      prometheus-operator-6c55f986bc-krvgg        2/2     Running   0               5d19h
+➜  test-app git:(main) ✗ kubectl --kubeconfig=./kube.conf get svc --all-namespaces;
+NAMESPACE       NAME                                 TYPE           CLUSTER-IP      EXTERNAL-IP                                    PORT(S)                        AGE
+default         kubernetes                           ClusterIP      10.233.0.1      <none>                                         443/TCP                        5d23h
+default         my-nginx-service                     NodePort       10.233.61.211   <none>                                         80:30080/TCP                   16m
+ingress-nginx   ingress-nginx-controller             LoadBalancer   10.233.58.92    89.169.152.192,158.160.90.189,158.160.86.141   80:32728/TCP,443:32374/TCP     34m
+ingress-nginx   ingress-nginx-controller-admission   ClusterIP      10.233.47.78    <none>                                         443/TCP                        34m
+kube-system     coredns                              ClusterIP      10.233.0.3      <none>                                         53/UDP,53/TCP,9153/TCP         5d23h
+kube-system     kubelet                              ClusterIP      None            <none>                                         10250/TCP,10255/TCP,4194/TCP   5d19h
+monitoring      alertmanager-main                    ClusterIP      10.233.19.139   <none>                                         9093/TCP,8080/TCP              5d19h
+monitoring      blackbox-exporter                    ClusterIP      10.233.55.119   <none>                                         9115/TCP,19115/TCP             5d19h
+monitoring      kube-state-metrics                   ClusterIP      None            <none>                                         8443/TCP,9443/TCP              5d19h
+monitoring      node-exporter                        ClusterIP      None            <none>                                         9100/TCP                       5d19h
+monitoring      prometheus-adapter                   ClusterIP      10.233.41.33    <none>                                         443/TCP                        5d19h
+monitoring      prometheus-k8s                       ClusterIP      10.233.60.157   <none>                                         9090/TCP,8080/TCP              5d19h
+monitoring      prometheus-operator                  ClusterIP      None            <none>                                         8443/TCP                       5d19h
+➜  test-app git:(main) ✗ kubectl --kubeconfig=./kube.conf get pods -n ingress-nginx;
+NAME                                        READY   STATUS    RESTARTS   AGE
+ingress-nginx-controller-7657f6db5f-hqttm   1/1     Running   0          34m
+➜  test-app git:(main) ✗ kubectl --kubeconfig=./kube.conf get namespaces;
+NAME              STATUS   AGE
+default           Active   5d23h
+ingress-nginx     Active   132m
+kube-node-lease   Active   5d23h
+kube-public       Active   5d23h
+kube-system       Active   5d23h
+monitoring        Active   5d19h
+➜  test-app git:(main) ✗ kubectl --kubeconfig=./kube.conf get deployment -n ingress-nginx
+NAME                       READY   UP-TO-DATE   AVAILABLE   AGE
+ingress-nginx-controller   1/1     1            1           35m
+➜  test-app git:(main) ✗ kubectl --kubeconfig=./kube.conf describe ingress my-nginx-ingress -n default;
+Name:             my-nginx-ingress
+Labels:           <none>
+Namespace:        default
+Address:          158.160.86.141,158.160.90.189,89.169.152.192
+Ingress Class:    nginx
+Default backend:  <default>
+Rules:
+  Host                Path  Backends
+  ----                ----  --------
+  netology.zapto.org
+                      /   my-nginx-service:80 (10.233.71.17:80)
+Annotations:          nginx.ingress.kubernetes.io/rewrite-target: /
+Events:
+  Type    Reason  Age                From                      Message
+  ----    ------  ----               ----                      -------
+  Normal  Sync    16m (x2 over 17m)  nginx-ingress-controller  Scheduled for sync
+➜  test-app git:(main) ✗ kubectl --kubeconfig=./kube.conf describe svc ingress-nginx-controller -n ingress-nginx;
+Name:                     ingress-nginx-controller
+Namespace:                ingress-nginx
+Labels:                   app.kubernetes.io/component=controller
+                          app.kubernetes.io/instance=ingress-nginx
+                          app.kubernetes.io/managed-by=Helm
+                          app.kubernetes.io/name=ingress-nginx
+                          app.kubernetes.io/part-of=ingress-nginx
+                          app.kubernetes.io/version=1.12.0
+                          helm.sh/chart=ingress-nginx-4.12.0
+Annotations:              meta.helm.sh/release-name: ingress-nginx
+                          meta.helm.sh/release-namespace: ingress-nginx
+Selector:                 app.kubernetes.io/component=controller,app.kubernetes.io/instance=ingress-nginx,app.kubernetes.io/name=ingress-nginx
+Type:                     LoadBalancer
+IP Family Policy:         SingleStack
+IP Families:              IPv4
+IP:                       10.233.58.92
+IPs:                      10.233.58.92
+External IPs:             89.169.152.192,158.160.90.189,158.160.86.141
+Port:                     http  80/TCP
+TargetPort:               http/TCP
+NodePort:                 http  32728/TCP
+Endpoints:                10.233.75.42:80
+Port:                     https  443/TCP
+TargetPort:               https/TCP
+NodePort:                 https  32374/TCP
+Endpoints:                10.233.75.42:443
+Session Affinity:         None
+External Traffic Policy:  Cluster
+Events:                   <none>
+➜  test-app git:(main) ✗ kubectl --kubeconfig=./kube.conf logs -n ingress-nginx ingress-nginx-controller-7657f6db5f-hqttm;
+-------------------------------------------------------------------------------
+NGINX Ingress controller
+  Release:       v1.12.0
+  Build:         ba73b2c24d355f1cdcf4b31ef7c5574059f12118
+  Repository:    https://github.com/kubernetes/ingress-nginx
+  nginx version: nginx/1.25.5
+
+-------------------------------------------------------------------------------
+
+W0208 13:46:26.729302       7 client_config.go:667] Neither --kubeconfig nor --master was specified.  Using the inClusterConfig.  This might not work.
+I0208 13:46:26.729553       7 main.go:205] "Creating API client" host="https://10.233.0.1:443"
+I0208 13:46:26.757672       7 main.go:248] "Running in Kubernetes cluster" major="1" minor="31" git="v1.31.4" state="clean" commit="a78aa47129b8539636eb86a9d00e31b2720fe06b" platform="linux/amd64"
+I0208 13:46:27.230875       7 main.go:101] "SSL fake certificate created" file="/etc/ingress-controller/ssl/default-fake-certificate.pem"
+I0208 13:46:27.277715       7 ssl.go:535] "loading tls certificate" path="/usr/local/certificates/cert" key="/usr/local/certificates/key"
+I0208 13:46:27.296469       7 nginx.go:271] "Starting NGINX Ingress controller"
+I0208 13:46:27.338045       7 event.go:377] Event(v1.ObjectReference{Kind:"ConfigMap", Namespace:"ingress-nginx", Name:"ingress-nginx-controller", UID:"2f5206bf-5704-42e6-942a-6e6ba8a077ed", APIVersion:"v1", ResourceVersion:"973591", FieldPath:""}): type: 'Normal' reason: 'CREATE' ConfigMap ingress-nginx/ingress-nginx-controller
+I0208 13:46:28.406608       7 store.go:440] "Found valid IngressClass" ingress="default/my-nginx-ingress" ingressclass="nginx"
+I0208 13:46:28.407423       7 event.go:377] Event(v1.ObjectReference{Kind:"Ingress", Namespace:"default", Name:"my-nginx-ingress", UID:"006d76b8-9b8e-47f5-ac04-d5cd8a49ef72", APIVersion:"networking.k8s.io/v1", ResourceVersion:"970176", FieldPath:""}): type: 'Normal' reason: 'Sync' Scheduled for sync
+I0208 13:46:28.499420       7 nginx.go:317] "Starting NGINX process"
+I0208 13:46:28.499483       7 leaderelection.go:257] attempting to acquire leader lease ingress-nginx/ingress-nginx-leader...
+I0208 13:46:28.500026       7 nginx.go:337] "Starting validation webhook" address=":8443" certPath="/usr/local/certificates/cert" keyPath="/usr/local/certificates/key"
+I0208 13:46:28.500411       7 controller.go:196] "Configuration changes detected, backend reload required"
+I0208 13:46:28.557292       7 controller.go:216] "Backend successfully reloaded"
+I0208 13:46:28.557443       7 controller.go:227] "Initial sync, sleeping for 1 second"
+I0208 13:46:28.558403       7 event.go:377] Event(v1.ObjectReference{Kind:"Pod", Namespace:"ingress-nginx", Name:"ingress-nginx-controller-7657f6db5f-hqttm", UID:"cd32adcd-2f19-4963-8b10-ab3161a57e74", APIVersion:"v1", ResourceVersion:"973625", FieldPath:""}): type: 'Normal' reason: 'RELOAD' NGINX reload triggered due to a change in configuration
+I0208 13:46:28.610879       7 status.go:85] "New leader elected" identity="ingress-nginx-controller-77fdbcb674-xq7kw"
+I0208 13:47:07.604414       7 leaderelection.go:271] successfully acquired lease ingress-nginx/ingress-nginx-leader
+I0208 13:47:07.604591       7 status.go:85] "New leader elected" identity="ingress-nginx-controller-7657f6db5f-hqttm"
+I0208 13:47:07.623149       7 status.go:304] "updating Ingress status" namespace="default" ingress="my-nginx-ingress" currentValue=[{"ip":"89.169.152.192"}] newValue=[{"ip":"158.160.86.141"},{"ip":"158.160.90.189"},{"ip":"89.169.152.192"}]
+I0208 13:47:07.635507       7 event.go:377] Event(v1.ObjectReference{Kind:"Ingress", Namespace:"default", Name:"my-nginx-ingress", UID:"006d76b8-9b8e-47f5-ac04-d5cd8a49ef72", APIVersion:"networking.k8s.io/v1", ResourceVersion:"973763", FieldPath:""}): type: 'Normal' reason: 'Sync' Scheduled for sync
+I0208 13:57:21.948506       7 main.go:107] "successfully validated configuration, accepting" ingress="default/my-nginx-ingress"
+I0208 13:57:21.960873       7 event.go:377] Event(v1.ObjectReference{Kind:"Ingress", Namespace:"default", Name:"my-nginx-ingress", UID:"006d76b8-9b8e-47f5-ac04-d5cd8a49ef72", APIVersion:"networking.k8s.io/v1", ResourceVersion:"974942", FieldPath:""}): type: 'Normal' reason: 'Sync' Scheduled for sync
+I0208 13:57:23.683797       7 main.go:107] "successfully validated configuration, accepting" ingress="monitoring/grafana-ingress"
+I0208 13:57:23.704790       7 store.go:440] "Found valid IngressClass" ingress="monitoring/grafana-ingress" ingressclass="nginx"
+I0208 13:57:23.705563       7 event.go:377] Event(v1.ObjectReference{Kind:"Ingress", Namespace:"monitoring", Name:"grafana-ingress", UID:"4ee5e8c4-3325-4418-b325-c3c0d47a51b8", APIVersion:"networking.k8s.io/v1", ResourceVersion:"974951", FieldPath:""}): type: 'Normal' reason: 'Sync' Scheduled for sync
+I0208 13:57:24.834096       7 controller.go:196] "Configuration changes detected, backend reload required"
+I0208 13:57:24.889309       7 controller.go:216] "Backend successfully reloaded"
+I0208 13:57:24.890199       7 event.go:377] Event(v1.ObjectReference{Kind:"Pod", Namespace:"ingress-nginx", Name:"ingress-nginx-controller-7657f6db5f-hqttm", UID:"cd32adcd-2f19-4963-8b10-ab3161a57e74", APIVersion:"v1", ResourceVersion:"973625", FieldPath:""}): type: 'Normal' reason: 'RELOAD' NGINX reload triggered due to a change in configuration
+I0208 13:58:07.623629       7 status.go:304] "updating Ingress status" namespace="monitoring" ingress="grafana-ingress" currentValue=null newValue=[{"ip":"158.160.86.141"},{"ip":"158.160.90.189"},{"ip":"89.169.152.192"}]
+I0208 13:58:07.642250       7 event.go:377] Event(v1.ObjectReference{Kind:"Ingress", Namespace:"monitoring", Name:"grafana-ingress", UID:"4ee5e8c4-3325-4418-b325-c3c0d47a51b8", APIVersion:"networking.k8s.io/v1", ResourceVersion:"975040", FieldPath:""}): type: 'Normal' reason: 'Sync' Scheduled for sync
+W0208 14:02:26.433868       7 controller.go:1215] Service "default/my-nginx-service" does not have any active Endpoint.
+I0208 14:02:29.767371       7 controller.go:196] "Configuration changes detected, backend reload required"
+I0208 14:02:29.805429       7 controller.go:216] "Backend successfully reloaded"
+I0208 14:02:29.806470       7 event.go:377] Event(v1.ObjectReference{Kind:"Pod", Namespace:"ingress-nginx", Name:"ingress-nginx-controller-7657f6db5f-hqttm", UID:"cd32adcd-2f19-4963-8b10-ab3161a57e74", APIVersion:"v1", ResourceVersion:"973625", FieldPath:""}): type: 'Normal' reason: 'RELOAD' NGINX reload triggered due to a change in configuration
+W0208 14:02:41.206866       7 controller.go:1215] Service "default/my-nginx-service" does not have any active Endpoint.
+I0208 14:02:41.243148       7 main.go:107] "successfully validated configuration, accepting" ingress="default/my-nginx-ingress"
+I0208 14:02:41.254541       7 store.go:440] "Found valid IngressClass" ingress="default/my-nginx-ingress" ingressclass="nginx"
+I0208 14:02:41.255173       7 event.go:377] Event(v1.ObjectReference{Kind:"Ingress", Namespace:"default", Name:"my-nginx-ingress", UID:"c94bc095-5d80-47e5-9223-2b11a71de838", APIVersion:"networking.k8s.io/v1", ResourceVersion:"975610", FieldPath:""}): type: 'Normal' reason: 'Sync' Scheduled for sync
+W0208 14:02:42.477452       7 controller.go:1109] Error obtaining Endpoints for Service "monitoring/grafana-service": no object matching key "monitoring/grafana-service" in local store
+I0208 14:02:42.504794       7 main.go:107] "successfully validated configuration, accepting" ingress="monitoring/grafana-ingress"
+I0208 14:02:42.523004       7 store.go:440] "Found valid IngressClass" ingress="monitoring/grafana-ingress" ingressclass="nginx"
+I0208 14:02:42.523723       7 event.go:377] Event(v1.ObjectReference{Kind:"Ingress", Namespace:"monitoring", Name:"grafana-ingress", UID:"3fa51bb6-83c8-4004-b019-07796b77c9cf", APIVersion:"networking.k8s.io/v1", ResourceVersion:"975628", FieldPath:""}): type: 'Normal' reason: 'Sync' Scheduled for sync
+W0208 14:02:44.240767       7 controller.go:1109] Error obtaining Endpoints for Service "monitoring/grafana-service": no object matching key "monitoring/grafana-service" in local store
+I0208 14:02:44.240918       7 controller.go:196] "Configuration changes detected, backend reload required"
+I0208 14:02:44.299261       7 controller.go:216] "Backend successfully reloaded"
+I0208 14:02:44.300490       7 event.go:377] Event(v1.ObjectReference{Kind:"Pod", Namespace:"ingress-nginx", Name:"ingress-nginx-controller-7657f6db5f-hqttm", UID:"cd32adcd-2f19-4963-8b10-ab3161a57e74", APIVersion:"v1", ResourceVersion:"973625", FieldPath:""}): type: 'Normal' reason: 'RELOAD' NGINX reload triggered due to a change in configuration
+W0208 14:02:47.574220       7 controller.go:1109] Error obtaining Endpoints for Service "monitoring/grafana-service": no object matching key "monitoring/grafana-service" in local store
+I0208 14:03:07.624794       7 status.go:304] "updating Ingress status" namespace="monitoring" ingress="grafana-ingress" currentValue=null newValue=[{"ip":"158.160.86.141"},{"ip":"158.160.90.189"},{"ip":"89.169.152.192"}]
+I0208 14:03:07.625326       7 status.go:304] "updating Ingress status" namespace="default" ingress="my-nginx-ingress" currentValue=null newValue=[{"ip":"158.160.86.141"},{"ip":"158.160.90.189"},{"ip":"89.169.152.192"}]
+W0208 14:03:07.645553       7 controller.go:1109] Error obtaining Endpoints for Service "monitoring/grafana-service": no object matching key "monitoring/grafana-service" in local store
+I0208 14:03:07.646456       7 event.go:377] Event(v1.ObjectReference{Kind:"Ingress", Namespace:"monitoring", Name:"grafana-ingress", UID:"3fa51bb6-83c8-4004-b019-07796b77c9cf", APIVersion:"networking.k8s.io/v1", ResourceVersion:"975682", FieldPath:""}): type: 'Normal' reason: 'Sync' Scheduled for sync
+I0208 14:03:07.646610       7 event.go:377] Event(v1.ObjectReference{Kind:"Ingress", Namespace:"default", Name:"my-nginx-ingress", UID:"c94bc095-5d80-47e5-9223-2b11a71de838", APIVersion:"networking.k8s.io/v1", ResourceVersion:"975683", FieldPath:""}): type: 'Normal' reason: 'Sync' Scheduled for sync
+W0208 14:03:10.979137       7 controller.go:1109] Error obtaining Endpoints for Service "monitoring/grafana-service": no object matching key "monitoring/grafana-service" in local store
+W0208 14:04:01.030179       7 controller.go:1215] Service "default/my-nginx-service" does not have any active Endpoint.
+W0208 14:04:01.030445       7 controller.go:1109] Error obtaining Endpoints for Service "monitoring/grafana-service": no object matching key "monitoring/grafana-service" in local store
+I0208 14:04:04.363796       7 controller.go:196] "Configuration changes detected, backend reload required"
+I0208 14:04:04.407454       7 controller.go:216] "Backend successfully reloaded"
+I0208 14:04:04.408793       7 event.go:377] Event(v1.ObjectReference{Kind:"Pod", Namespace:"ingress-nginx", Name:"ingress-nginx-controller-7657f6db5f-hqttm", UID:"cd32adcd-2f19-4963-8b10-ab3161a57e74", APIVersion:"v1", ResourceVersion:"973625", FieldPath:""}): type: 'Normal' reason: 'RELOAD' NGINX reload triggered due to a change in configuration
+W0208 14:04:11.931840       7 controller.go:1215] Service "default/my-nginx-service" does not have any active Endpoint.
+I0208 14:04:11.968089       7 main.go:107] "successfully validated configuration, accepting" ingress="default/my-nginx-ingress"
+I0208 14:04:11.980943       7 store.go:440] "Found valid IngressClass" ingress="default/my-nginx-ingress" ingressclass="nginx"
+I0208 14:04:11.982146       7 event.go:377] Event(v1.ObjectReference{Kind:"Ingress", Namespace:"default", Name:"my-nginx-ingress", UID:"1ed9b7ff-1d53-4010-8f7c-934db3f66271", APIVersion:"networking.k8s.io/v1", ResourceVersion:"975850", FieldPath:""}): type: 'Normal' reason: 'Sync' Scheduled for sync
+I0208 14:04:14.989991       7 controller.go:196] "Configuration changes detected, backend reload required"
+I0208 14:04:15.044923       7 controller.go:216] "Backend successfully reloaded"
+I0208 14:04:15.046279       7 event.go:377] Event(v1.ObjectReference{Kind:"Pod", Namespace:"ingress-nginx", Name:"ingress-nginx-controller-7657f6db5f-hqttm", UID:"cd32adcd-2f19-4963-8b10-ab3161a57e74", APIVersion:"v1", ResourceVersion:"973625", FieldPath:""}): type: 'Normal' reason: 'RELOAD' NGINX reload triggered due to a change in configuration
+I0208 14:05:07.623699       7 status.go:304] "updating Ingress status" namespace="default" ingress="my-nginx-ingress" currentValue=null newValue=[{"ip":"158.160.86.141"},{"ip":"158.160.90.189"},{"ip":"89.169.152.192"}]
+I0208 14:05:07.642469       7 event.go:377] Event(v1.ObjectReference{Kind:"Ingress", Namespace:"default", Name:"my-nginx-ingress", UID:"1ed9b7ff-1d53-4010-8f7c-934db3f66271", APIVersion:"networking.k8s.io/v1", ResourceVersion:"975971", FieldPath:""}): type: 'Normal' reason: 'Sync' Scheduled for sync
+➜  test-app git:(main) ✗ kubectl --kubeconfig=./kube.conf get events -n ingress-nginx;
+LAST SEEN   TYPE      REASON              OBJECT                                           MESSAGE
+36m         Normal    Scheduled           pod/ingress-nginx-admission-create-5kmll         Successfully assigned ingress-nginx/ingress-nginx-admission-create-5kmll to node2
+36m         Normal    Pulled              pod/ingress-nginx-admission-create-5kmll         Container image "registry.k8s.io/ingress-nginx/kube-webhook-certgen:v1.5.0@sha256:aaafd456bda110628b2d4ca6296f38731a3aaf0bf7581efae824a41c770a8fc4" already present on machine
+36m         Normal    Created             pod/ingress-nginx-admission-create-5kmll         Created container create
+36m         Normal    Started             pod/ingress-nginx-admission-create-5kmll         Started container create
+36m         Normal    SuccessfulCreate    job/ingress-nginx-admission-create               Created pod: ingress-nginx-admission-create-5kmll
+36m         Normal    Completed           job/ingress-nginx-admission-create               Job completed
+35m         Normal    Scheduled           pod/ingress-nginx-admission-patch-bntqq          Successfully assigned ingress-nginx/ingress-nginx-admission-patch-bntqq to node3
+35m         Normal    Pulled              pod/ingress-nginx-admission-patch-bntqq          Container image "registry.k8s.io/ingress-nginx/kube-webhook-certgen:v1.5.0@sha256:aaafd456bda110628b2d4ca6296f38731a3aaf0bf7581efae824a41c770a8fc4" already present on machine
+35m         Normal    Created             pod/ingress-nginx-admission-patch-bntqq          Created container patch
+35m         Normal    Started             pod/ingress-nginx-admission-patch-bntqq          Started container patch
+35m         Normal    SuccessfulCreate    job/ingress-nginx-admission-patch                Created pod: ingress-nginx-admission-patch-bntqq
+35m         Normal    Completed           job/ingress-nginx-admission-patch                Job completed
+36m         Normal    Scheduled           pod/ingress-nginx-controller-7657f6db5f-hqttm    Successfully assigned ingress-nginx/ingress-nginx-controller-7657f6db5f-hqttm to node2
+36m         Normal    Pulled              pod/ingress-nginx-controller-7657f6db5f-hqttm    Container image "registry.k8s.io/ingress-nginx/controller:v1.12.0@sha256:e6b8de175acda6ca913891f0f727bca4527e797d52688cbe9fec9040d6f6b6fa" already present on machine
+36m         Normal    Created             pod/ingress-nginx-controller-7657f6db5f-hqttm    Created container controller
+36m         Normal    Started             pod/ingress-nginx-controller-7657f6db5f-hqttm    Started container controller
+18m         Normal    RELOAD              pod/ingress-nginx-controller-7657f6db5f-hqttm    NGINX reload triggered due to a change in configuration
+36m         Normal    SuccessfulCreate    replicaset/ingress-nginx-controller-7657f6db5f   Created pod: ingress-nginx-controller-7657f6db5f-hqttm
+41m         Normal    Killing             pod/ingress-nginx-controller-77fdbcb674-xq7kw    Stopping container controller
+41m         Warning   Unhealthy           pod/ingress-nginx-controller-77fdbcb674-xq7kw    Readiness probe failed: HTTP probe failed with statuscode: 500
+36m         Normal    ScalingReplicaSet   deployment/ingress-nginx-controller              Scaled up replica set ingress-nginx-controller-7657f6db5f to 1
+36m         Normal    CREATE              configmap/ingress-nginx-controller               ConfigMap ingress-nginx/ingress-nginx-controller
+➜  test-app git:(main) ✗ kubectl --kubeconfig=./kube.conf describe pod ingress-nginx-controller-7657f6db5f-hqttm -n ingress-nginx
+Name:             ingress-nginx-controller-7657f6db5f-hqttm
+Namespace:        ingress-nginx
+Priority:         0
+Service Account:  ingress-nginx
+Node:             node2/10.10.40.30
+Start Time:       Sat, 08 Feb 2025 16:46:25 +0300
+Labels:           app.kubernetes.io/component=controller
+                  app.kubernetes.io/instance=ingress-nginx
+                  app.kubernetes.io/managed-by=Helm
+                  app.kubernetes.io/name=ingress-nginx
+                  app.kubernetes.io/part-of=ingress-nginx
+                  app.kubernetes.io/version=1.12.0
+                  helm.sh/chart=ingress-nginx-4.12.0
+                  pod-template-hash=7657f6db5f
+Annotations:      cni.projectcalico.org/containerID: 3fe7c1f1b6e99776303978979dd2247ebad1ef2e1917d6eb50efb1fe9e604934
+                  cni.projectcalico.org/podIP: 10.233.75.42/32
+                  cni.projectcalico.org/podIPs: 10.233.75.42/32
+Status:           Running
+IP:               10.233.75.42
+IPs:
+  IP:           10.233.75.42
+Controlled By:  ReplicaSet/ingress-nginx-controller-7657f6db5f
+Containers:
+  controller:
+    Container ID:    containerd://a21b0b965156380eadd6a9721d3bd32131a79e08f74754a70526f369d55bd5bc
+    Image:           registry.k8s.io/ingress-nginx/controller:v1.12.0@sha256:e6b8de175acda6ca913891f0f727bca4527e797d52688cbe9fec9040d6f6b6fa
+    Image ID:        registry.k8s.io/ingress-nginx/controller@sha256:e6b8de175acda6ca913891f0f727bca4527e797d52688cbe9fec9040d6f6b6fa
+    Ports:           80/TCP, 443/TCP, 8443/TCP
+    Host Ports:      0/TCP, 0/TCP, 0/TCP
+    SeccompProfile:  RuntimeDefault
+    Args:
+      /nginx-ingress-controller
+      --publish-service=$(POD_NAMESPACE)/ingress-nginx-controller
+      --election-id=ingress-nginx-leader
+      --controller-class=k8s.io/ingress-nginx
+      --ingress-class=nginx
+      --configmap=$(POD_NAMESPACE)/ingress-nginx-controller
+      --validating-webhook=:8443
+      --validating-webhook-certificate=/usr/local/certificates/cert
+      --validating-webhook-key=/usr/local/certificates/key
+    State:          Running
+      Started:      Sat, 08 Feb 2025 16:46:26 +0300
+    Ready:          True
+    Restart Count:  0
+    Requests:
+      cpu:      100m
+      memory:   90Mi
+    Liveness:   http-get http://:10254/healthz delay=10s timeout=1s period=10s #success=1 #failure=5
+    Readiness:  http-get http://:10254/healthz delay=10s timeout=1s period=10s #success=1 #failure=3
+    Environment:
+      POD_NAME:       ingress-nginx-controller-7657f6db5f-hqttm (v1:metadata.name)
+      POD_NAMESPACE:  ingress-nginx (v1:metadata.namespace)
+      LD_PRELOAD:     /usr/local/lib/libmimalloc.so
+    Mounts:
+      /usr/local/certificates/ from webhook-cert (ro)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-fp6vq (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True
+  Initialized                 True
+  Ready                       True
+  ContainersReady             True
+  PodScheduled                True
+Volumes:
+  webhook-cert:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  ingress-nginx-admission
+    Optional:    false
+  kube-api-access-fp6vq:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   Burstable
+Node-Selectors:              kubernetes.io/os=linux
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age                From                      Message
+  ----    ------     ----               ----                      -------
+  Normal  Scheduled  36m                default-scheduler         Successfully assigned ingress-nginx/ingress-nginx-controller-7657f6db5f-hqttm to node2
+  Normal  Pulled     36m                kubelet                   Container image "registry.k8s.io/ingress-nginx/controller:v1.12.0@sha256:e6b8de175acda6ca913891f0f727bca4527e797d52688cbe9fec9040d6f6b6fa" already present on machine
+  Normal  Created    36m                kubelet                   Created container controller
+  Normal  Started    36m                kubelet                   Started container controller
+  Normal  RELOAD     19m (x6 over 36m)  nginx-ingress-controller  NGINX reload triggered due to a change in configuration
+➜  test-app git:(main) ✗
