@@ -31,15 +31,16 @@ apiVersion: v1
 kind: Service
 metadata:
   name: my-nginx-service
+  annotations:
+    metallb.universe.tf/allow-shared-ip: my-nginx
 spec:
+  type: LoadBalancer
   selector:
     app: my-nginx
   ports:
-  - protocol: TCP
-    port: 80
-    targetPort: 80
-    nodePort: 30080
-  type: NodePort
+    - protocol: TCP
+      port: 80
+      targetPort: 80
 
 ---
 # ===========================
@@ -64,3 +65,4 @@ spec:
                 name: my-nginx-service
                 port:
                   number: 80
+
