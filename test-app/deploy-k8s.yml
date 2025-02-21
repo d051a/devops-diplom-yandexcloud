@@ -25,14 +25,12 @@ spec:
 
 ---
 # ===========================
-# Service для Nginx
+# Service для Nginx с LoadBalancer
 # ===========================
 apiVersion: v1
 kind: Service
 metadata:
   name: my-nginx-service
-  annotations:
-    metallb.universe.tf/allow-shared-ip: my-nginx
 spec:
   type: LoadBalancer
   selector:
@@ -44,19 +42,54 @@ spec:
 
 ---
 # ===========================
-# Ingress Controller для доступа на порт 80
+# Service для Ingress c NodePort
+# ===========================
+apiVersion: v1
+kind: Service
+metadata:
+  name: ingress-nginx-nodeport
+  namespace: ingress-nginx
+spec:
+  type: NodePort
+  selector:
+    app.kubernetes.io/name: ingress-nginx
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 80
+      nodePort: 31234
+
+---
+# ===========================
+# Service для Prometheus-Grafana с NodePort
+# ===========================
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus-monitoring-grafana-nodeport
+spec:
+  type: NodePort
+  selector:
+    app: prometheus-monitoring-grafana
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+      nodePort: 31080
+
+---
+# ===========================
+# Ingress Controller для доступа к Nginx
 # ===========================
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: my-nginx-ingress
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   ingressClassName: nginx
   rules:
-    - host: "netology.zapto.org"
-      http:
+    - http:
         paths:
           - path: /
             pathType: Prefix
@@ -66,3 +99,24 @@ spec:
                 port:
                   number: 80
 
+---
+# ===========================
+# Ingress Controller для доступа к Prometheus/Grafana
+# ===========================
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: prometheus-grafana-ingress
+  namespace: default
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - path: /monitoring
+            pathType: Prefix
+            backend:
+              service:
+                name: prometheus-monitoring-grafana
+                port:
+                  number: 80

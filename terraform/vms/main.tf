@@ -24,8 +24,8 @@ resource "yandex_vpc_subnet" "lab-subnets" {
 locals {
   instances = [
     { name = "k8s-master", zone = "ru-central1-a", subnet = "subnet-1", cores = 2, memory = 4 },
-    { name = "k8s-worker-1", zone = "ru-central1-b", subnet = "subnet-2", cores = 2, memory = 8 },
-    { name = "k8s-worker-2", zone = "ru-central1-b", subnet = "subnet-3", cores = 2, memory = 8 }
+    { name = "k8s-worker-1", zone = "ru-central1-b", subnet = "subnet-2", cores = 2, memory = 6 },
+    { name = "k8s-worker-2", zone = "ru-central1-b", subnet = "subnet-3", cores = 2, memory = 6 }
   ]
 }
 
