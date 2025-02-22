@@ -25,12 +25,14 @@ spec:
 
 ---
 # ===========================
-# Service для Nginx с LoadBalancer
+# Service для Nginx
 # ===========================
 apiVersion: v1
 kind: Service
 metadata:
   name: my-nginx-service
+  annotations:
+    metallb.universe.tf/allow-shared-ip: my-nginx
 spec:
   type: LoadBalancer
   selector:
@@ -42,7 +44,7 @@ spec:
 
 ---
 # ===========================
-# Service для Ingress c NodePort
+# Service для Ingress (NodePort)
 # ===========================
 apiVersion: v1
 kind: Service
@@ -86,6 +88,8 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: my-nginx-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   ingressClassName: nginx
   rules:
@@ -101,13 +105,19 @@ spec:
 
 ---
 # ===========================
-# Ingress Controller для доступа к Prometheus/Grafana
+# Ingress Controller для Grafana в namespace default
 # ===========================
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: prometheus-grafana-ingress
   namespace: default
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      proxy_set_header X-Script-Name /monitoring;
+      proxy_set_header X-Forwarded-Host $host;
+      proxy_set_header X-Forwarded-Proto $scheme;
 spec:
   ingressClassName: nginx
   rules:
@@ -120,3 +130,45 @@ spec:
                 name: prometheus-monitoring-grafana
                 port:
                   number: 80
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus-monitoring-grafana
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus-monitoring-grafana
+  template:
+    metadata:
+      labels:
+        app: prometheus-monitoring-grafana
+    spec:
+      containers:
+        - name: grafana
+          image: grafana/grafana:latest
+          env:
+            - name: GF_SERVER_ROOT_URL
+              value: "%(protocol)s://%(domain)s/monitoring/"
+          volumeMounts:
+            - mountPath: /etc/grafana/grafana.ini
+              name: grafana-config
+              subPath: grafana.ini
+      volumes:
+        - name: grafana-config
+          configMap:
+            name: grafana-config
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-config
+  namespace: default
+data:
+  grafana.ini: |
+    [server]
+    root_url = %(protocol)s://%(domain)s/monitoring/
+    serve_from_sub_path = true
